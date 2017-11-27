@@ -1,0 +1,102 @@
+<!DOCTYPE >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+
+<style>
+
+	body{
+		margin: 0px;
+		padding: 0px;
+		background-image: url("images/xx.jpg");
+	}
+	.iv{
+		background-color:#fff;
+		width: 500px;
+		height:auto;
+	}
+	
+	.update{
+		border: 0px green solid;
+		width: 500px;
+		height:auto;
+	}
+	
+	#fd1{
+		margin-left:30px;
+		width:400px;
+		text-align: center;
+	}
+	.update #fanhui{
+		float:right;
+	}
+	.frm table{
+		width:400px;
+		height:420px;
+	}
+
+</style>
+
+</head>
+<body>
+<div class="iv"><br/><br/>
+	<!-- 修改学生信息 -->
+	<div class="update" id="up1" >
+		<fieldset id="fd1"  contenteditable="false">
+			<legend><b>学生信息详细</b></legend>
+		<form action="/KaoShiXiTo/houtai/Sstudentinfo?type=insertStu" method="post" class="frm" name="frm1">
+
+		<table >
+			<tr>
+				<th height="50" width="150">编&emsp;&emsp;号:</th>
+				<td height="50" width="200">${stu.id }</td>
+			</tr>
+			<tr>
+				<th height="50" width="150">学&emsp;&emsp;号:</th>
+				<td>${stu.stuId }</td>
+			</tr>
+			<tr>
+				<th height="50">学生姓名:</th>
+				<td>${stu.stuName }</td>
+			</tr>
+			<tr><th height="50">性&emsp;&emsp;别:</th>
+				<td>${stu.sex }</td>
+			</tr>
+			<tr><th  height="50">出生日期:</th>
+				<td>${stu.birthday }</td>
+			</tr>
+			<tr><th height="50">民&emsp;&emsp;族:</th>
+				<td>${stu.nation }</td>
+			</tr>
+			<tr><th  height="50">出生地址:</th>
+				<td>${stu.birthPlace }</td>
+			</tr>
+			<tr><th  height="50">身份证号:</th>
+				<td>${stu.idCard }</td>
+			</tr>
+			<tr><th height="50">专&emsp;&emsp;业:</th>
+				<td>${stu.marjor }</td>
+			</tr>
+			<tr><th height="50">年&emsp;&emsp;级:</th>
+				<td>${stu.grade }</td>
+			</tr>
+			<tr><th  height="50">班级名称:</th>
+				<td>${stu.className }</td>
+			</tr>
+			<tr><th height="50">密&emsp;&emsp;码:</th>
+				<td>${stu.password_ }</td>
+			</tr>
+			<tr><th height="50">是否删除:</th>
+				<td>${stu.bl}</td>
+			</tr>
+			<tr><th  height="100">备&emsp;&emsp;注:</th>
+				<td>${stu.remark }</td>
+			</tr>
+		</table>
+		</form>
+		</fieldset>
+	</div>
+</div>
+</body>
+</html>

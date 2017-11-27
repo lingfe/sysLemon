@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>layui</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="layui/css/layui.css"  media="all">
+  <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+
+  <script src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+</head>
+<body ng-app="myApp" ng-controller="DuihShangpManger_update">
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+  <legend>修改兑换商品信息</legend>
+</fieldset>
+<form class="layui-form layui-form-pane">
+  <div class="layui-form-item">
+    <label class="layui-form-label">商品标题</label>
+    <div class="layui-input-block">
+      <input type="text" ng-model="title"  class="layui-input" >
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">积分</label>
+    <div class="layui-input-inline">
+      <input type="text" ng-model="integral"  placeholder="请输入积分" class="layui-input">
+    </div>
+  </div>
+  
+  <div class="layui-form-item">
+    <div class="layui-inline">
+      <label class="layui-form-label">库存</label>
+      <div class="layui-input-block">
+        <input type="text" ng-model="surplus"  placeholder="请输入库存"  autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-inline">
+      <label class="layui-form-label">设置状态</label>
+      <div class="layui-input-block">
+        <select id="state" lay-filter="aihao">
+          <option value='0'>显示</option>
+          <option value='1'>下架</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">上传图片</label>
+    <div class="layui-input-inline">
+      <input type="file" name="file" class="layui-upload-file" id="test">
+    </div>
+    <div class="layui-input-inline">
+      <img id="LAY_demo_upload" width="300" height="300" src="images/16.jpg">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <button class="layui-btn" ng-click="btnUpdate()" lay-filter="demo2">修改商品</button>
+  </div>
+</form>
+          
+<script src="layui/layui.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+<script>
+    var imgurl="";
+    layui.use(['form','upload'], function(){
+      var form = layui.form;
+
+      layui.upload({
+        url: '/upload/doUpload'
+        ,elem: '#test' //指定原始元素，默认直接查找class="layui-upload-file"
+        ,method: 'POST' //上传接口的http类型
+        ,success: function(res){
+          LAY_demo_upload.src = "https://static.daho.club/static/upload/"+res;
+          imgurl=LAY_demo_upload.src;
+        }
+      });
+    });
+
+
+    //angularJS
+    var app = angular.module('myApp', []);
+        app.config(['$locationProvider', function($locationProvider) {  
+          // $locationProvider.html5Mode(true);  
+          $locationProvider.html5Mode({
+            enabled: true,
+            requireBase: false
+          });
+        }]); 
+    
+    app.controller('DuihShangpManger_update', function($scope, $location,$http) {
+        //判断id是否为空
+        if ($location.search().id) {
+          var noticeId = $location.search().id;
+              var url = "/deal/get/convertibleCommodity/Query";
+              //请求头
+              var headers = { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8','Accept': '*/*' ,'X-Requested-With':'XMLHttpRequest'};
+              //参数
+              var data = angular.toJson({
+                  "rows":[{
+                    'id':noticeId,
+                  }]
+                });
+
+              //发送请求
+              $http({
+                  method: 'POST',
+                  data:'reqJson='+data,
+                  headers:headers,
+                  url: url,
+              })
+              .then(function successCallback(response) {
+                  var list = response.data.rows[0]
+                  $scope.title=list.title;
+                  $scope.integral=list.integral;
+                  $scope.surplus=list.surplus;
+                  $scope.state=list.state;
+                  LAY_demo_upload.src=list.imgUrl;
+                  imgurl=list.imgUrl;
+                  var str=list.state == 0?'显示':'下架';
+                  $(".layui-input").val(str);
+
+              }, function errorCallback(response) {
+                  // 请求失败执行代码       
+              });
+        }
+
+        //修改
+        $scope.btnUpdate=function(){
+              //添加商品信息
+              var url = "/deal/save/convertibleCommodity/Query/save";
+              //请求头
+              var headers = { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8','Accept': '*/*' ,'X-Requested-With':'XMLHttpRequest'};
+              var state=$("#state").val();
+
+              //参数
+              var data = angular.toJson({
+                  "rows":[{
+                    'id':noticeId,
+                    'title':$scope.title,
+                    'integral':$scope.integral,
+                    'surplus':$scope.surplus,
+                    'state':state,
+                    'imgUrl':imgurl,
+                  }]
+                });
+
+              //发送请求
+              $http({
+                  method: 'POST',
+                  data:'reqJson='+data,
+                  headers:headers,
+                  url: url,
+              })
+              .then(function successCallback(response) {
+                  $scope.list = response.data.rows;
+                  alert('修改成功!');
+                  window.history.back();
+              }, function errorCallback(response) {
+                  // 请求失败执行代码       
+              });
+        };
+    });
+</script>
+
+</body>
+</html>

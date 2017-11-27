@@ -1,0 +1,177 @@
+
+<!DOCTYPE >
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>兑换商品管理</title>
+	<link href="css/public.css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" type="text/css" href="css/common.css"/>
+	<link rel="stylesheet" type="text/css" href="css/main.css"/>
+	
+	<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="js/global.js"></script>
+	<script src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+</head>
+<body>
+	<div class="crumb-wrap">
+		<div class="crumb-list">
+			<i class="icon-font">&#xe000;</i>
+			<a href="/KaoShiXiTo/houtai/Home.jsp" target="_blank">首页</a>
+			<span class="crumb-step">&gt;</span>
+			<a class="crumb-name"href="javascript:void(0)">兑换商品管理</a>
+		</div>
+	</div>
+	<!-- 当前位置 -->
+	<div class="mainBox"
+		style="height: auto !important; height: 550px; min-height: 550px;">
+		<h3>
+			<a href="DuihShangpManger_add.html" target="if" class="actionBtn add">添加商品</a>兑换商品管理
+		</h3>
+		<div class="filter">
+			<form action="article.php" method="post">
+				<select name="cat_id">
+					<option value="0">未分类</option>
+					<option value="1">公司动态</option>
+					<option value="2">行业新闻</option>
+				</select> <input name="keyword" type="text" class="inpMain" value=""
+					size="20" /> <input name="submit" class="btnGray" type="submit"
+					value="筛选" />
+			</form>
+		</div>
+		<!-- anglarJS start -->
+		<div id="list" ng-app="myApp" ng-controller="duihuanManges" >
+			<form name="action" method="post"  action="article.php?rec=action">
+				<table width="100%" border="0" cellpadding="8" cellspacing="0"
+					class="tableBasic">
+					<tr>
+						<th width="40" align="center">
+							<input name='chkall'
+							type='checkbox' 
+							id='chkall' 
+							onclick='selectcheckbox(this.form)'value='check'>ID
+						</th>
+						<th  align="center">商品图片</th>
+						<th  align="center">商品标题</th>
+						<th  align="center">积分</th>
+						<th  align="center">剩余(件/个/份)</th>
+						<th align="center">可兑换商品状态,0..</th>
+						<th  align="center">创建时间</th>
+						<th   align="center">修改时间</th>
+						<th>操作</th>
+					</tr>
+
+					<tr ng-repeat=" st in list">
+						<td align="center"><input  type="checkbox" name="checkbox[]"
+							value="10" />{{st.id}}</td>
+						<td align="center">
+							<img src="{{st.imgUrl}}" width="80" height="60" alt="{{st.imgUrl}}" />
+						</td>
+						<td align="center">{{st.title}}</td>
+						<td align="center">{{st.integral}}</td>
+						<td align="center">{{st.surplus}}</td>
+						<td align="center">{{st.state == 0 ?'显示':'下架'}}</td>
+						<td align="center">{{st.cdate}}</td>
+						<td align="center">{{st.mdate}}</td>
+						<td align="center">
+							<a href="DuihShangpManger_update.html?id={{st.id}}" >编辑</a> | 
+							<a href="javascript:void(0);" ng-click="btnDelete(this)" >删除</a>
+						</td>
+					</tr>
+				</table>
+				<div class="action">
+					<select name="action" onchange="douAction()">
+						<option value="0">请选择...</option>
+						<option value="del_all">删除</option>
+						<option value="category_move">移动分类至</option>
+					</select> <select name="new_cat_id" style="display: none">
+						<option value="0">未分类</option>
+						<option value="1">公司动态</option>
+						<option value="2">行业新闻</option>
+					</select> <input name="submit" class="btn" type="submit" value="执行" />
+				</div>
+			</form>
+		</div>
+		<div class="clear"></div>
+		<div class="pager">
+			总计 10 个记录，共 1 页，当前第 1 页 | <a href="article.php?page=1">第一页</a> 上一页
+			下一页 <a href="article.php?page=1">最末页</a>
+		</div>
+	</div>
+	
+	<!-- angularJS  -->
+	<script>
+
+	$(function(){
+		//ajax
+		$.post("/deal/get/convertibleCommodity/Query",{ reqJson: JSON.stringify({filterRules:'[]',rows: [{df:0 }]})},function(result){});});
+
+
+		//angularJS
+		var app = angular.module('myApp', []);
+		app.controller('duihuanManges', function($scope, $http) {
+			$scope.btnDelete=function(that){
+				//获取兑换商品信息
+			    var url = "/deal/save/convertibleCommodity/Query/Delete";
+			   	//请求头
+	    		var headers = { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8','Accept': '*/*' ,'X-Requested-With':'XMLHttpRequest'};
+
+              //参数
+              var data = angular.toJson({
+                  "rows":[{
+                    'id':that.st.id,
+                  }]
+                });
+
+			    //发送请求
+			    $http({
+			        method: 'POST',
+			        data:'reqJson='+data,
+			        headers:headers,
+			        url: url,
+			    })
+			    .then(function successCallback(response) {
+			        alert('删除成功!');
+				        var list = $scope.list;
+				        $scope.list = [];
+				        angular.forEach(list, function(st) {
+				            if (st.id != that.st.id) $scope.list.push(st);
+				        });
+    			    }, function errorCallback(response) {
+			        // 请求失败执行代码		    
+			    });
+			}
+
+		    //获取兑换商品信息
+		    var url = "/deal/get/convertibleCommodity/Query";
+		   	//请求头
+    		var headers = { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8','Accept': '*/*' ,'X-Requested-With':'XMLHttpRequest'};
+
+		    //参数
+		    var data = angular.toJson({
+		    		"filterRules":"[]",
+		    		"rows":[{"df":0}]
+		    	});
+
+		    //发送请求
+		    $http({
+		        method: 'POST',
+		        data:'reqJson='+data,
+		        headers:headers,
+		        url: url,
+		    })
+		    .then(function successCallback(response) {
+		        $scope.list = response.data.rows;
+
+		    }, function errorCallback(response) {
+		        // 请求失败执行代码		    
+		    });
+		  
+		});
+
+		app.controller('siteCtrl', function($scope, $http) {
+		  $http.get("http://www.runoob.com/try/angularjs/data/sites.php")
+		  .then(function (response) {$scope.names = response.data.sites;});
+		});
+	</script>
+</body>
+</html>

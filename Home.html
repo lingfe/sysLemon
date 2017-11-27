@@ -1,0 +1,185 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>柠檬回收后台管理</title>
+		<!-- 页面基本样式 -->
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<link href="css/public.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="css/common.css" />
+		
+		<!-- public js -->
+		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="js/global.js"></script>
+
+		<script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script>
+		
+		<!-- js处理 -->
+		<script type="text/javascript">
+			$(function() {
+
+				$(".inp").mouseover(function() {
+					$(this).css("background-color", "blue");
+				});
+				$(".inp").mouseout(function() {
+					$(this).css("background-color", "gray");
+				});
+
+			});
+
+			function ck() {
+				document.getElementById("add").style.display = 'none';
+				document.getElementById("updataPwd").style.display = 'none';
+				document.getElementById("updateName").style.display = 'none';
+			}
+		</script>
+	</head>
+	<body>
+		<div id="dcHead" ng-app="myApp" ng-controller="home">
+			<div id="head">
+				<div class="logo" style="border-right: 0px;">
+					<a href="#"><font color="#fff" size="4">柠檬回收后台管理</font></a>
+				</div>
+				<div class="nav" style="border-left: 0px;">
+					<ul style="margin-left: 8px;">
+						<li class="M"><a href="JavaScript:void(0);" class="topAdd">快速入口</a>
+							<div class="drop mTopad">
+								<a href="DuihShangpManger.html" target="if">兑换商品管理</a>
+								<a href="DuihOrderManger.html" target="if">兑换订单管理</a>
+							</div>
+						</li>
+						<li><a href="DuihOrderManger.html" target="if">查看兑换订单信息</a></li>
+						<li><a href="JavaScript:void(0);" target="if">查看预约订单信息</a></li>
+						<li class="noRight"><a href="javascript:void(0)">Java Web</a></li>
+					</ul>
+					<ul class="navRight">
+						<li class="M noLeft">
+							<a href="JavaScript:void(0);">管理员:{{userName}}</a>
+							<div class="drop mUser">
+								才艺展示 <img alt="" src="images/t1.gif"> <a
+									href="javascript:void(0)"
+									onclick="javascript:document.getElementById('updataPwd').style.display='block';">修改我的密码</a>
+								<a href="javascript:void(0)"
+									onclick="javascript:document.getElementById('add').style.display='block';">修改我的用户</a>
+							</div></li>
+						<li class="noRight"><a href="Login.html">注销</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="container clearfix">
+			<div class="sidebar-wrap">
+				<div class="sidebar-title">
+					<h1><i class="icon-font">&#xe000;</i>首页</h1>
+				</div>
+				<div class="sidebar-content">
+					<ul class="sidebar-list">
+						<li>
+							<a href="javascript:void(0)">
+								<i class="icon-font">&#xe018;</i>用户管理
+							</a>
+							<ul class="sub-menu">
+								<li><a href="javascript:void(0)"
+									onclick="javascript:document.getElementById('add').style.display='block';"
+									target="if"><i class="icon-font">&#xe002;</i>管理员管理</a></li>
+								<li><a href="javascript:void(0)"
+									onclick="javascript:document.getElementById('updataPwd').style.display='block';"><i
+										class="icon-font">&#xe004;</i>收集员管理</a></li>
+								<li><a href="javascript:void(0)"
+									onclick="javascript:document.getElementById('updateName').style.display='block';"><i
+										class="icon-font">&#xe007;</i>柠檬用户管理</a></li>
+							</ul>
+						</li>
+						<li>
+							<a href="javascript:void(0)">
+								<i class="icon-font">&#xe018;</i>兑换管理
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="DuihShangpManger.html" target="if">
+										<i class="icon-font">&#xe00c;</i>
+										兑换商品管理
+									</a>
+								</li>
+								<li>
+									<a href="DuihOrderManger.html" target="if">
+										<i class="icon-font">&#xe00a;</i>
+										兑换订单管理
+									</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="javascript:void(0)">
+								<i class="icon-font">&#xe018;</i>数据管理
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="ReservationDataManger.html" target="if">
+										<i class="icon-font">&#xe03b;</i>预约数据管理
+									</a>
+								</li>
+								<li>
+									<a href="myContributionManger.html" target="if">
+										<i class="icon-font">&#xe031;</i>贡献资源管理
+									</a>
+								</li>
+								<li>
+									<a href="recyclingrecordsManger.html" target="if">
+										<i class="icon-font">&#xe05e;</i>回收纪录管理
+									</a>
+								</li>
+							</ul>
+						</li>
+
+						<li>
+							<a href="javascript:void(0)">
+								<i class="icon-font">&#xe018;</i>柠檬公益管理
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="applyOldclothes.html" target="if">
+										<i class="icon-font">&#xe05f;</i>申请旧衣管理
+									</a>
+								</li>
+								<li><a href="JavaScript:void(0);"
+									target="if"><i class="icon-font">&#xe005;</i>公益动态管理</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<!--/sidebar-->
+			<div class="main-wrap">
+				<iframe name="if" src="index.html" style="border: 0px solid red; width: 100%; height: 100%;"></iframe>
+			</div>
+			<!--/main-->
+		</div>
+		<script>
+			var app = angular.module('myApp', []);
+
+			var urlValue='';
+			//取得整个地址栏
+			var href = location.href; 
+			//此处只有一个参数，先截取参数值（等号后的值）。
+			urlValue = href.substr(href.indexOf("=") + 1);
+			//传参会转码，所以先解码，再把字符串string转对象
+			var message=angular.fromJson(decodeURI(urlValue));
+			
+			app.controller('home', function($scope,$location) {	
+				$scope.userName=message.rows.userName;
+			})
+
+
+
+			//下面处理图片路径
+			// if(message.picUrl.length>0){
+			//     for (var i = 0; i < message.picUrl.length; i++){
+			//         message.picUrl[i] = decodeURIComponent(message.picUrl[i]);
+			//         //接收的参数在解码转对象时，参数里的MP3或者图片的url未被解码，
+			//         //所以继续decodeURIComponent解码，并重新赋值。
+			//     }
+			// }
+		</script>
+	</body>
+</html>
