@@ -78,7 +78,7 @@
 						<td align="center">{{st.mdate}}</td>
 						<td align="center">
 							<a href="javascript:void(0);">编辑</a> | 
-							<a href="javascript:void(0);">删除</a>
+							<a href="javascript:void(0)" ng-click="btnDelete(this)">删除</a>
 						</td>
 					</tr>
 				</table>
@@ -113,7 +113,39 @@
 		//angularJS
 		var app = angular.module('myApp', []);
 		app.controller('duihuanManges', function($scope, $http) {
-		    //获取兑换商品信息
+			$scope.btnDelete=function(that){
+				//删除申请旧衣信息
+			    var url = "/deal/save/applyOldclothes/Query/Delete";
+			   	//请求头
+	    		var headers = { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8','Accept': '*/*' ,'X-Requested-With':'XMLHttpRequest'};
+
+              //参数
+              var data = angular.toJson({
+                  "rows":[{
+                    'id':that.st.id,
+                  }]
+                });
+
+			    //发送请求
+			    $http({
+			        method: 'POST',
+			        data:'reqJson='+data,
+			        headers:headers,
+			        url: url,
+			    })
+			    .then(function successCallback(response) {
+			        alert('删除成功!');
+				        var list = $scope.list;
+				        $scope.list = [];
+				        angular.forEach(list, function(st) {
+				            if (st.id != that.st.id) $scope.list.push(st);
+				        });
+    			    }, function errorCallback(response) {
+			        // 请求失败执行代码		    
+			    });
+			}
+
+		    //获取申请旧衣信息
 		    var url = "/deal/get/applyOldclothes/Query";
 		   	//请求头
     		var headers = { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8','Accept': '*/*' ,'X-Requested-With':'XMLHttpRequest'};

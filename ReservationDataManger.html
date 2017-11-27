@@ -6,7 +6,9 @@
 	<link href="css/public.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" type="text/css" href="css/common.css"/>
 	<link rel="stylesheet" type="text/css" href="css/main.css"/>
-	
+	<!-- css bottom-->
+	<link rel="stylesheet" type="text/css" href="http://www.bootcss.com/p/buttons/css/buttons.css">
+
 	<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
 	<script type="text/javascript" src="js/global.js"></script>
 	<script src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
@@ -84,7 +86,12 @@
 						<td align="center">{{st.cdate}}</td>
 						<td align="center">{{st.mdate}}</td>
 						<td align="center">
-							无操作
+							<div ng-show='{{st.state == 0}}'>
+								<a ng-click="chuli(this,1)" class="button button-glow button-rounded button-highlight">处理</a>
+								<hr/>
+  								<a ng-click="chuli(this,2)" class="button button-glow button-rounded button-caution">不处理</a>
+							</div>
+							<a  ng-show='{{st.state != 0}}' href="javascript:void(0);" ng-click="btnDelete(this)" >删除</a>
 							<!-- <a href="DuihShangpManger_update.html?id={{st.id}}" >编辑</a> | 
 							<a href="javascript:void(0);" ng-click="btnDelete(this)" >删除</a> -->
 						</td>
@@ -115,9 +122,10 @@
 		//angularJS
 		var app = angular.module('myApp', []);
 		app.controller('DuihOrderManger', function($scope, $http) {
+			//删除
 			$scope.btnDelete=function(that){
-				//获取兑换商品信息
-			    var url = "/deal/save/convertibleCommodity/Query/Delete";
+				//删除预约数据
+			    var url = "/deal/save/lemonRecovery/Query/Delete";
 			   	//请求头
 	    		var headers = { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8','Accept': '*/*' ,'X-Requested-With':'XMLHttpRequest'};
 
@@ -147,7 +155,37 @@
 			    });
 			}
 
-		    //获取兑换商品信息
+			//修改状态
+			$scope.chuli=function(that,state){
+				//修改预约状态
+			    var url = "/deal/save/lemonRecovery/Query/save";
+			   	//请求头
+	    		var headers = { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8','Accept': '*/*' ,'X-Requested-With':'XMLHttpRequest'};
+	    		//参数
+              var data = angular.toJson({
+                  "rows":[{
+                    'id':that.st.id,
+                    'state':state,
+                  }]
+                });
+
+			    //发送请求
+			    $http({
+			        method: 'POST',
+			        data:'reqJson='+data,
+			        headers:headers,
+			        url: url,
+			    })
+			    .then(function successCallback(response) {
+			        alert('操作成功!');
+					//刷新
+			        window.location.reload();
+    			}, function errorCallback(response) {
+			        // 请求失败执行代码		    
+			    });
+			}
+
+		    //获取预约数据
 		    var url = "/deal/get/lemonRecovery/Query";
 		   	//请求头
     		var headers = { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8','Accept': '*/*' ,'X-Requested-With':'XMLHttpRequest'};
@@ -155,6 +193,7 @@
 		    //参数
 		    var data = angular.toJson({
 		    		"filterRules":"[]",
+		    		'pagesize':50,
 		    		"rows":[{"df":0}]
 		    	});
 

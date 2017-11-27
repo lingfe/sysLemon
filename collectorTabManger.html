@@ -1,0 +1,131 @@
+<!DOCTYPE html >
+<html>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>收集员管理</title>
+	<link rel="stylesheet" type="text/css" href="css/common.css" />
+	<link rel="stylesheet" type="text/css" href="css/main.css" />
+	<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+	<script src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+	</head>
+<body ng-app="myApp" ng-controller="collectorTabManger">
+	<!--/sidebar-->
+	<div class="main-wrap" style="border: 0px red solid; margin-left: 0px;">
+		<div class="crumb-wrap">
+			<div class="crumb-list">
+				<i class="icon-font">&#xe000;</i>
+				<a href="Home.html" target="_blank">首页</a>
+				<span class="crumb-step">&gt;</span>
+				<a href="collectorTabManger.html" target="if">收集员管理</a>
+			</div>
+		</div>
+
+		<div class="result-wrap">
+			<form name="myform" id="myform" method="post">
+				<div class="result-title">
+					<div class="result-list">
+						<a href="collectorTabManger_add.html" target="if"><i class="icon-font"></i>新增</a> 
+						<a id="batchDel" href="javascript:void(0)"><i class="icon-font"></i>全选</a>
+						<a id="updateOrd" href="javascript:void(0)"><i class="icon-font"></i>更新排序</a>
+					</div>
+				</div>
+				<div class="result-content">
+					<table class="result-tab" width="100%">
+						<tr>
+							<th>回收员表id标识</th>
+							<th>编号，密匙</th>
+							<th>名称</th>
+							<th>头像地址</th>
+							<th>状态</th>
+							<th>创建时间</th>
+							<th>修改时间</th>
+							<th>操作</th>
+						</tr>
+							<tr ng-repeat=" st in list.rows">
+								<td>{{st.id}}</td>
+								<td>{{st.codeing}}</td>
+								<td>{{st.codeName}}</td>
+								<td>{{st.imgUrl}}</td>
+								<td>{{st.state}}</td>
+								<td>{{st.cdate}}</td>
+								<td>{{st.mdate}}</td>
+								<td>
+									<a href="collectorTabManger.html">删除</a>
+									<b>/</b>
+									<a href="collectorTabManger_update.html">修改</a>
+								</td>
+							</tr>
+					</table>
+					<div class="list-page">{{list.total}} 条 1/1 页</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- angularJS  -->
+	<script>
+
+		//angularJS
+		var app = angular.module('myApp', []);
+		app.controller('collectorTabManger', function($scope, $http) {
+			$scope.btnDelete=function(that){
+				//获取兑换商品信息
+			    var url = "/deal/save/collectorTab/Query/Delete";
+			   	//请求头
+	    		var headers = { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8','Accept': '*/*' ,'X-Requested-With':'XMLHttpRequest'};
+
+              //参数
+              var data = angular.toJson({
+                  "rows":[{
+                    'id':that.st.id,
+                  }]
+                });
+
+			    //发送请求
+			    $http({
+			        method: 'POST',
+			        data:'reqJson='+data,
+			        headers:headers,
+			        url: url,
+			    })
+			    .then(function successCallback(response) {
+			        alert('删除成功!');
+				        var list = $scope.list;
+				        $scope.list = [];
+				        angular.forEach(list, function(st) {
+				            if (st.id != that.st.id) $scope.list.push(st);
+				        });
+    			    }, function errorCallback(response) {
+			        // 请求失败执行代码		    
+			    });
+			}
+
+		    //获取兑换商品信息
+		    var url = "/deal/get/collectorTab/Query";
+		   	//请求头
+    		var headers = { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8','Accept': '*/*' ,'X-Requested-With':'XMLHttpRequest'};
+
+		    //参数
+		    var data = angular.toJson({
+		    		"filterRules":"[]",
+		    		"rows":[{"df":0}]
+		    	});
+
+		    //发送请求
+		    $http({
+		        method: 'POST',
+		        data:'reqJson='+data,
+		        headers:headers,
+		        url: url,
+		    })
+		    .then(function successCallback(response) {
+		        $scope.list = response.data;
+
+		    }, function errorCallback(response) {
+		        // 请求失败执行代码		    
+		    });
+		  
+		});
+	</script>
+</body>
+</html>

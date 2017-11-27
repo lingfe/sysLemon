@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>试卷管理</title>
+<title>公益动态管理</title>
 <link href="css/public.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" type="text/css" href="css/common.css"/>
 <link rel="stylesheet" type="text/css" href="css/main.css"/>
@@ -11,7 +11,7 @@
 <script type="text/javascript" src="js/global.js"></script>
 <script type="text/javascript" src="js/jquery.autotextarea.js"></script>
 <script type="text/javascript" src="js/modernizr.min.js"></script>
-
+<script src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
 <style type="text/css">
 	
 	.update{
@@ -100,35 +100,36 @@ function up1show(a,b,c,d,e,f){
 
 </script>
 </head>
-<body>
+<body ng-app="myApp" ng-controller="lemonDynamicManger">
 <div class="crumb-wrap">
 		<div class="crumb-list">
-			<i class="icon-font"></i><a href="/KaoShiXiTo/houtai/Home.jsp" target="_blank">首页</a><span
-				class="crumb-step">&gt;</span><a class="crumb-name"
-				href="javascript:void(0)">组卷管理</a>
+			<i class="icon-font">&#xe000;</i>
+				<a href="Home.html" target="_blank">首页</a>
+				<span class="crumb-step">&gt;</span>
+				<a class="crumb-name" href="lemonDynamicManger.html" target="if">公益动态管理</a>
 		</div>
 </div>
 		<div class="mainBox"
 			style="height: auto !important; height: 550px; min-height: 550px;">
 			
 			<h3>
-				<a href="javascript:void(0)" onclick="javascript:document.getElementById('notkao').style.display='block';"  class="actionBtn">取消考试</a>
-				<a href="javascript:void(0)" onclick="javascript:document.getElementById('okkao').style.display='block';"  class="actionBtn">设置考试</a>
-				<a href="javascript:void(0)" onclick="javascript:document.getElementById('up2').style.display='block';" class="actionBtn">生成试卷</a>试卷信息
+				<a href="javascript:void(0)" onclick="javascript:document.getElementById('notkao').style.display='block';"  class="actionBtn">取消显示</a>
+				<a href="lemonDynamicManger_add.html" class="actionBtn">设置新闻</a>
+				<a href="javascript:void(0)" onclick="javascript:document.getElementById('up2').style.display='block';" class="actionBtn">生成模板</a>公益动态管理
 			</h3>
 			
 			<div class="page">
-				<c:forEach items="${requestScope.all }" var="all">
-					<dl class="child1">
+					<dl class="child1" ng-repeat=" st in list">
 						<dt>
-						 <marquee><strong>${all.biaoti }</strong></marquee>
+						 	<marquee>
+						 		<strong>{{st.title}}</strong>
+						 	</marquee>
 						</dt>
 						<dd>
-						<a href="javascript:void(0)" onclick="up1show(${all.sj_id},'${all.kecheng }','${all.stype }','${all.biaoti }','${all.chutiren }','${all.chutitime }')" >编辑</a> | 
-						<a href="/KaoShiXiTo/houtai/Sshijuan?type=delete&sj_id=${all.sj_id }">删除</a>
+							<a href="lemonDynamicManger_update.html?id={{st.id}}">编辑</a> | 
+							<a href="javascript:void(0)" ng-click="btnDelete(this)">删除</a>
 						</dd>
 					</dl>
-				</c:forEach>
 			</div>
 		</div>
 		
@@ -262,5 +263,69 @@ function up1show(a,b,c,d,e,f){
 		</form>
 		</fieldset>
 	</div>
+
+	<!-- angularJS  -->
+	<script>
+		//angularJS
+		var app = angular.module('myApp', []);
+		app.controller('lemonDynamicManger', function($scope, $http) {
+			$scope.btnDelete=function(that){
+				//删除公益动态新闻信息
+			    var url = "/deal/save/lemonDynamic/Query/Delete";
+			   	//请求头
+	    		var headers = { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8','Accept': '*/*' ,'X-Requested-With':'XMLHttpRequest'};
+
+              //参数
+              var data = angular.toJson({
+                  "rows":[{
+                    'id':that.st.id,
+                  }]
+                });
+
+			    //发送请求
+			    $http({
+			        method: 'POST',
+			        data:'reqJson='+data,
+			        headers:headers,
+			        url: url,
+			    })
+			    .then(function successCallback(response) {
+			        alert('删除成功!');
+				        var list = $scope.list;
+				        $scope.list = [];
+				        angular.forEach(list, function(st) {
+				            if (st.id != that.st.id) $scope.list.push(st);
+				        });
+    			    }, function errorCallback(response) {
+			        // 请求失败执行代码		    
+			    });
+			}
+
+		    //获取公益动态新闻信息
+		    var url = "/deal/get/lemonDynamic/Query";
+		   	//请求头
+    		var headers = { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8','Accept': '*/*' ,'X-Requested-With':'XMLHttpRequest'};
+
+		    //参数
+		    var data = angular.toJson({
+		    		"filterRules":"[]",
+		    		"rows":[{"df":0}]
+		    	});
+
+		    //发送请求
+		    $http({
+		        method: 'POST',
+		        data:'reqJson='+data,
+		        headers:headers,
+		        url: url,
+		    })
+		    .then(function successCallback(response) {
+		        $scope.list = response.data.rows;
+		    }, function errorCallback(response) {
+		        // 请求失败执行代码		    
+		    });
+		  
+		});
+	</script>
 </body>
 </html>
