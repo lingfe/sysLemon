@@ -18,9 +18,9 @@
 	<div class="crumb-wrap">
 		<div class="crumb-list">
 			<i class="icon-font">&#xe000;</i>
-			<a href="/KaoShiXiTo/houtai/Home.jsp" target="_blank">首页</a>
+			<a href="Home.html" target="_blank">首页</a>
 			<span class="crumb-step">&gt;</span>
-			<a class="crumb-name"href="javascript:void(0)">兑换订单管理</a>
+			<a class="crumb-name"href="DuihOrderManger.html" target="if">兑换订单管理</a>
 		</div>
 	</div>
 	<!-- 当前位置 -->
@@ -85,8 +85,9 @@
 						<td align="center">{{st.totalIntegral}}</td>
 						<td align="center">{{st.number}}</td>
 						<td align="center">
-							<div ng-show="{{st.state == 0}}">已提交,未发货</div>
-							<div ng-show="{{st.state == 1}}">已发货,已完成</div>
+							<div ng-show="{{st.state == 0}}">已下单,未发货</div>
+							<div ng-show="{{st.state == 1}}">已发货,未确认</div>
+							<div ng-show="{{st.state == 2}}">已收货,已确认</div>
 						</td>
 						<td align="center">{{st.cdate}}</td>
 						<td align="center">{{st.mdate}}</td>
@@ -163,14 +164,18 @@
 			   	//请求头
 	    		var headers = { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8','Accept': '*/*' ,'X-Requested-With':'XMLHttpRequest'};
 
+	    	   var logisticsNumber = prompt("请输入物流号:", ""); //将输入的内容赋给变量 name ，  
+
               //参数
               var data = angular.toJson({
                   "rows":[{
                     'id':that.st.id,
-                    'state':1,//兑换订单状态,0=（已提交,未发货）,1=(已完成,已发货),2..
+                    'logisticsNumber':logisticsNumber,//物流单号
+                    'state':1,//兑换订单状态,状态,0=（已下单,未发货）,1=（已发货,未确认),2=(已收货,已确认)
                   }]
                 });
 
+              	if(!logisticsNumber) return;
 			    //发送请求
 			    $http({
 			        method: 'POST',

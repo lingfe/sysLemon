@@ -50,9 +50,9 @@
 								<td>{{st.cdate}}</td>
 								<td>{{st.mdate}}</td>
 								<td>
-									<a href="collectorTabManger.html">删除</a>
+									<a href="javascript:void(0)" ng-click="btnDelete(this)">删除</a>
 									<b>/</b>
-									<a href="collectorTabManger_update.html">修改</a>
+									<a href="collectorTabManger_update.html?id={{st.id}}" target="if">修改</a>
 								</td>
 							</tr>
 					</table>
@@ -68,8 +68,9 @@
 		//angularJS
 		var app = angular.module('myApp', []);
 		app.controller('collectorTabManger', function($scope, $http) {
+			
 			$scope.btnDelete=function(that){
-				//获取兑换商品信息
+				//删除收集员信息
 			    var url = "/deal/save/collectorTab/Query/Delete";
 			   	//请求头
 	    		var headers = { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8','Accept': '*/*' ,'X-Requested-With':'XMLHttpRequest'};
@@ -90,17 +91,17 @@
 			    })
 			    .then(function successCallback(response) {
 			        alert('删除成功!');
-				        var list = $scope.list;
-				        $scope.list = [];
+				        var list = $scope.list.rows;
+				        $scope.list.rows = [];
 				        angular.forEach(list, function(st) {
-				            if (st.id != that.st.id) $scope.list.push(st);
+				            if (st.id != that.st.id) $scope.list.rows.push(st);
 				        });
     			    }, function errorCallback(response) {
 			        // 请求失败执行代码		    
 			    });
 			}
 
-		    //获取兑换商品信息
+		    //获取收集员信息
 		    var url = "/deal/get/collectorTab/Query";
 		   	//请求头
     		var headers = { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8','Accept': '*/*' ,'X-Requested-With':'XMLHttpRequest'};
